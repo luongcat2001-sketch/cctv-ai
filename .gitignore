@@ -3,6 +3,8 @@
 .env.*
 *.env
 *.env.*
+!.env.example
+!**/.env.example
 .envrc
 .npmrc
 .pypirc
@@ -99,3 +101,4 @@ worktrees/
 .DS_Store
 Thumbs.db
 Desktop.ini
+scratch/
