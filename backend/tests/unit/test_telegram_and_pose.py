@@ -126,13 +126,13 @@ def test_live_webcam_model_mode_and_telegram_config():
         model_mode="yolo_pose",
         precision_mode="cuda_fp16",
         enable_skeleton=True,
-        telegram_chat_id="8269826134",
+        telegram_chat_id="123456789",
         telegram_enabled=True,
     )
     assert res["model_mode"] == "yolo_pose"
     assert res["precision_mode"] == "cuda_fp16"
     assert res["enable_skeleton"] is True
-    assert res["telegram"]["chat_id"] == "8269826134"
+    assert res["telegram"]["chat_id"] == "123456789"
     assert res["telegram"]["enabled"] is True
 
 
