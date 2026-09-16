@@ -195,7 +195,7 @@ export const LiveWebcam: React.FC = () => {
   });
   const [showAiModal, setShowAiModal] = useState(false);
 
-  // Telegram Bot Alert Config (Exclusively locked to @diep_nguyenk5 - 8269826134)
+  // Telegram Bot Alert Config
   const [telegramEnabled, setTelegramEnabled] = useState<boolean>(() => {
     try {
       const v = localStorage.getItem("cctv_live_telegram_enabled");
@@ -203,7 +203,13 @@ export const LiveWebcam: React.FC = () => {
     } catch {}
     return true;
   });
-  const [telegramChatId, setTelegramChatId] = useState<string>("8269826134");
+  const [telegramChatId, setTelegramChatId] = useState<string>(() => {
+    try {
+      return localStorage.getItem("cctv_live_telegram_chat_id") || "";
+    } catch {
+      return "";
+    }
+  });
   const [telegramEvents, setTelegramEvents] = useState<string[]>(["RÚT TIỀN", "BỎ TIỀN", "CHẠM RỔ"]);
   const [showTelegramModal, setShowTelegramModal] = useState(false);
   const showTelegramModalRef = useRef(showTelegramModal);
@@ -347,7 +353,9 @@ export const LiveWebcam: React.FC = () => {
           if (data.precision_mode) setPrecisionMode(data.precision_mode);
           if (data.enable_skeleton !== undefined) setEnableSkeleton(data.enable_skeleton);
           if (data.telegram) {
-            setTelegramChatId("8269826134");
+            if (data.telegram.chat_id) {
+              setTelegramChatId(data.telegram.chat_id);
+            }
             if (!showTelegramModalRef.current && data.telegram.enabled !== undefined) {
               setTelegramEnabled(data.telegram.enabled);
             }
@@ -452,7 +460,7 @@ export const LiveWebcam: React.FC = () => {
     showToast(next ? "Đã bật hiển thị Khung Xương (Skeleton)" : "Đã ẩn Khung Xương", "info");
   };
 
-  // Telegram Bot Handlers (Locked to @diep_nguyenk5)
+  // Telegram Bot Handlers
   const handleToggleTelegramEnabled = async (checked: boolean) => {
     setTelegramEnabled(checked);
     try {
@@ -460,11 +468,11 @@ export const LiveWebcam: React.FC = () => {
     } catch {}
     await updateConfig({
       telegram_enabled: checked,
-      telegram_chat_id: "8269826134",
+      telegram_chat_id: telegramChatId,
       telegram_events: telegramEvents,
     });
     showToast(
-      checked ? "Đã BẬT cảnh báo Telegram cho @diep_nguyenk5" : "Đã TẮT cảnh báo Telegram",
+      checked ? "Đã BẬT cảnh báo Telegram" : "Đã TẮT cảnh báo Telegram",
       checked ? "success" : "info"
     );
   };
@@ -476,7 +484,7 @@ export const LiveWebcam: React.FC = () => {
     setTelegramEvents(nextEvents);
     await updateConfig({
       telegram_enabled: telegramEnabled,
-      telegram_chat_id: "8269826134",
+      telegram_chat_id: telegramChatId,
       telegram_events: nextEvents,
     });
   };
@@ -1564,12 +1572,12 @@ export const LiveWebcam: React.FC = () => {
                 type="button"
                 className={`deck-btn ${telegramEnabled ? "is-active highlight" : ""}`}
                 onClick={() => setShowTelegramModal(true)}
-                title="Khóa cảnh báo độc quyền: @diep_nguyenk5 (8269826134)"
+                title="Cài đặt cảnh báo Telegram Bot"
               >
                 <span className="deck-btn-icon">✈️</span>
-                <span className="deck-btn-label">@diep_nguyenk5</span>
+                <span className="deck-btn-label">TELEGRAM</span>
                 <span className={`deck-pill ${telegramEnabled ? "pill-emerald" : "pill-muted"}`}>
-                  {telegramEnabled ? "8269826134" : "TẮT"}
+                  {telegramEnabled ? (telegramChatId ? `#${telegramChatId}` : "BẬT") : "TẮT"}
                 </span>
               </button>
             </div>
@@ -1856,20 +1864,20 @@ export const LiveWebcam: React.FC = () => {
                 </div>
               </div>
 
-              {/* Locked User Card */}
+              {/* User Account Card */}
               <div className="settings-section">
-                <span className="settings-section-title">Tài Khoản Nhận Cảnh Báo (Cố Định Duy Nhất)</span>
+                <span className="settings-section-title">Tài Khoản Nhận Cảnh Báo</span>
                 <div className="telegram-user-card">
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                     <div className="telegram-user-avatar">
-                      DN
+                      TG
                     </div>
                     <div className="telegram-user-details">
-                      <div className="telegram-user-name">@diep_nguyenk5</div>
+                      <div className="telegram-user-name">
+                        {telegramChatId ? `Chat ID: ${telegramChatId}` : "Chưa cấu hình"}
+                      </div>
                       <div className="telegram-user-id">
-                        <span>Chat ID:</span>
-                        <code>8269826134</code>
-                        <span style={{ color: "#22C55E", fontSize: "0.75rem", marginLeft: "4px" }}>● Đã khóa bảo mật</span>
+                        <span>{telegramChatId ? "Đã kết nối" : "Cấu hình qua file .env hoặc API"}</span>
                       </div>
                     </div>
                   </div>
@@ -1928,7 +1936,7 @@ export const LiveWebcam: React.FC = () => {
               <button
                 type="button"
                 className="btn-inline-action primary"
-                onClick={() => handleSaveTelegramConfig(telegramEnabled, "8269826134", telegramEvents)}
+                onClick={() => handleSaveTelegramConfig(telegramEnabled, telegramChatId, telegramEvents)}
               >
                 Lưu Cấu Hình
               </button>

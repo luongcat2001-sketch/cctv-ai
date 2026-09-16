@@ -79,7 +79,7 @@ TELEGRAM_CHAT_ID=điền_chat_id_ở_đây
 2. **Kích hoạt:** Tìm bot của bạn trên Telegram và bấm **START** (hoặc gửi tin nhắn `/start`).
 3. **Lấy Chat ID:** 
    - *Cách 1 (Tự động):* Không cần điền `TELEGRAM_CHAT_ID`. Chỉ cần điền `TELEGRAM_BOT_TOKEN`, khởi động hệ thống, mở Web UI bấm nút **"Tự động nhận diện Chat ID"**!
-   - *Cách 2:* Chat với bot [@userinfobot](https://t.me/userinfobot) trên Telegram, bot sẽ báo cho bạn biết số `Id` (ví dụ: `8269826134`). Điền số đó vào `TELEGRAM_CHAT_ID`.
+   - *Cách 2:* Chat với bot [@userinfobot](https://t.me/userinfobot) trên Telegram, bot sẽ báo cho bạn biết số `Id` (ví dụ: `1234567890`). Điền số đó vào `TELEGRAM_CHAT_ID`.
 
 ---
 

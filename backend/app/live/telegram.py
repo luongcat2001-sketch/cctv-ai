@@ -105,28 +105,15 @@ class TelegramNotifier:
                     "message": "Chưa tìm thấy tin nhắn nào. Vui lòng mở Telegram, tìm bot @cameraAIyolo_bot và bấm START (hoặc gửi /start), sau đó bấm nút này lại.",
                 }
 
-            # Prioritize authorized user @diep_nguyenk5 / ID 8269826134
             latest_chat = None
             sender_name = ""
             for upd in reversed(updates):
                 msg = upd.get("message") or upd.get("channel_post") or upd.get("my_chat_member")
                 if msg and "chat" in msg:
                     chat = msg["chat"]
-                    uid = str(chat.get("id", ""))
-                    username = str(chat.get("username", "")).lower()
-                    if uid == "8269826134" or "diep_nguyenk5" in username:
-                        latest_chat = chat
-                        sender_name = chat.get("first_name") or chat.get("username") or "@diep_nguyenk5"
-                        break
-
-            if not latest_chat:
-                for upd in reversed(updates):
-                    msg = upd.get("message") or upd.get("channel_post") or upd.get("my_chat_member")
-                    if msg and "chat" in msg:
-                        chat = msg["chat"]
-                        latest_chat = chat
-                        sender_name = chat.get("first_name") or chat.get("title") or chat.get("username") or "Người dùng"
-                        break
+                    latest_chat = chat
+                    sender_name = chat.get("first_name") or chat.get("title") or chat.get("username") or "Người dùng"
+                    break
 
             if not latest_chat:
                 return {
@@ -157,12 +144,12 @@ class TelegramNotifier:
         text = (
             "🔔 <b>THỬ NGHIỆM KẾT NỐI CAMERA GIÁM SÁT AI</b>\n"
             "━━━━━━━━━━━━━━━━━━\n"
-            "✅ Hệ thống CCTV AI đã kết nối thành công với tài khoản của bạn (<b>@diep_nguyenk5</b>)!\n"
+            "✅ Hệ thống CCTV AI đã kết nối thành công với tài khoản Telegram của bạn!\n"
             "🛡 <b>Trạng thái:</b> Sẵn sàng cảnh báo tương tác rổ tiền.\n"
-            "🔒 <b>Bảo mật:</b> Đã khóa thông báo độc quyền cho Chat ID: <code>8269826134</code>\n"
+            f"🔒 <b>Chat ID nhận tin:</b> <code>{self.chat_id}</code>\n"
             f"🕒 <b>Thời gian:</b> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}\n"
             "━━━━━━━━━━━━━━━━━━\n"
-            "🤖 <i>@cameraAIyolo_bot phát triển bởi CCTV AI</i>"
+            "🤖 <i>CCTV AI - Hệ Thống Giám Sát Quầy Thu Ngân Thông Minh</i>"
         )
 
         url = f"https://api.telegram.org/bot{self.token}/sendMessage"

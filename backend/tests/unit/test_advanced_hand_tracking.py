@@ -152,7 +152,7 @@ def test_draw_cyber_hand_skeleton():
 
 
 def test_telegram_caption_formatting_with_gesture_and_currency():
-    notifier = TelegramNotifier(token="mock_token", chat_id="8269826134", enabled=True)
+    notifier = TelegramNotifier(token="mock_token", chat_id="123456789", enabled=True)
     with patch("requests.post") as mock_post:
         mock_post.return_value.status_code = 200
         event = {
@@ -171,4 +171,4 @@ def test_telegram_caption_formatting_with_gesture_and_currency():
         assert "RÚT TIỀN" in caption
         assert "Pinch" in caption
         assert "500.000đ" in caption
-        assert "8269826134" in str(call_kwargs["data"]["chat_id"])
+        assert "123456789" in str(call_kwargs["data"]["chat_id"])
